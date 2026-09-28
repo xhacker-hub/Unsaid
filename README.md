@@ -2,6 +2,8 @@
 
 A clickable prototype of Unsaid (Expo + React Native + TypeScript, Expo SDK 57). Two partners each answer a private questionnaire, then they both get a topic-by-topic chart and the questions to bring to their next meeting.
 
+**Try it in a browser: https://xhacker-hub.github.io/Unsaid/** (rebuilt automatically on every push to `main` by `.github/workflows/pages.yml`).
+
 ## Run it
 
 ```bash

@@ -1,8 +1,9 @@
 # Turns `npx expo export --platform web` output into one self-contained page (dist/unsaid.html):
 # JS inlined, the six fonts the app uses embedded as data URIs. Hosts that only serve a single
 # file, or block same-origin scripts, can then run the prototype.
+# Also writes dist/site/index.html, the same page as a full document, for GitHub Pages.
 #   npx expo export --platform web && python3 scripts/web-page.py
-import base64, glob, re
+import base64, glob, os, re
 
 USED = ['FamiljenGrotesk_400Regular', 'FamiljenGrotesk_500Medium', 'FamiljenGrotesk_600SemiBold',
         'FamiljenGrotesk_700Bold', 'ShantellSans_400Regular', 'ShantellSans_500Medium']
@@ -31,5 +32,12 @@ page = f'''<title>Unsaid</title>
 <div id="root"></div>
 <script>{js}</script>
 '''
-open('dist/unsaid.html', 'w').write(page)
-print(f'dist/unsaid.html {len(page) / 1e6:.1f} MB')
+open('dist/unsaid.html', 'w').write(page)  # fragment: the artifact host adds its own <head>
+
+os.makedirs('dist/site', exist_ok=True)
+open('dist/site/index.html', 'w').write(
+    '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+    '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+    '<meta name="theme-color" content="#3A0C17">\n'
+    + page.replace('<noscript>', '</head>\n<body>\n<noscript>', 1) + '</body>\n</html>\n')
+print(f'dist/unsaid.html + dist/site/index.html {len(page) / 1e6:.1f} MB')
